@@ -226,7 +226,32 @@ int main(int argc, char **argv) {
             }
         }
     }
+    
+    
+    Slide {
+        title: "Edit and run qml code"
 
+        content: [
+            "Run the demo",
+            "Drag the window by clicking\n the header",
+            "Edit the qml code (add/update/remove \nproperties)",
+            "Run the demo again"
+        ]
+
+        InteractiveCodeSection {
+
+            text: "Rectangle {
+    width: 200
+    height: 200
+    color: \"blue\"
+    anchors.centerIn: parent
+    Text {
+        text: \"Hello World\"
+        anchors.centerIn: parent
+    }
+}"
+        }
+    }
 
     Slide {
         title: "Features"

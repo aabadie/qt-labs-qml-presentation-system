@@ -9,7 +9,8 @@ qmldir.files += \
     src/CodeSlide.qml \
     src/Presentation.qml \
     src/Slide.qml \
-    src/SlideCounter.qml
+    src/SlideCounter.qml\
+    src/InteractiveCodeSection.qml
 
 qmldir.path +=  $$[QT_INSTALL_QML]/$$TARGETPATH
 
