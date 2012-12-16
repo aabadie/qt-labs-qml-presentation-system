@@ -9,7 +9,7 @@ Rectangle {
     height: parent.height
     
     
-    property alias text : textItem.text
+    property alias text : textEditItem.text
     property real fontSize: parent.baseFontSize / 2
     
     property Item demoObject
@@ -24,19 +24,49 @@ Rectangle {
     border.width: 2
     radius: 10
     
-    TextEdit {
+    Flickable {
         id: textItem
-        
+   
         width: parent.width - 20
         height: parent.height - 70
+        
+        anchors.margins: 20
         
         anchors.top: parent.top
         anchors.left: parent.left
         
-        anchors.margins: 20
-//        text: interactiveCodeRoot.text;
-        font.family: "courier"
-        font.pixelSize: interactiveCodeRoot.fontSize
+        contentWidth: textEditItem.paintedWidth
+        contentHeight: textEditItem.paintedHeight
+        clip: true
+   
+        function ensureVisible(r)
+        {
+            if (contentX >= r.x)
+                contentX = r.x;
+            else if (contentX+width <= r.x+r.width)
+                contentX = r.x+r.width-width;
+            if (contentY >= r.y)
+                contentY = r.y;
+            else if (contentY+height <= r.y+r.height)
+                contentY = r.y+r.height-height;
+        }
+   
+        TextEdit {
+            id: textEditItem
+            
+
+            width: textItem.width
+            height: textItem.height
+            
+            selectByMouse: true
+            
+            font.family: "courier"
+            font.pixelSize: interactiveCodeRoot.fontSize
+            
+            focus: true
+            wrapMode: TextEdit.Wrap
+            onCursorRectangleChanged: textItem.ensureVisible(cursorRectangle)
+        }
     }
     
     Item {
@@ -71,17 +101,19 @@ Rectangle {
                 hoverEnabled: true
                 
                 onClicked: {
-                    
                     if (demoObject !== null)
                         demoObject.destroy()
+                    
+                    demoHeaderContainer.visible = true
+                    demoCodeContainer.visible = true
+                    
                     demoObject = Qt.createQmlObject('import QtQuick 2.0; Item {anchors.fill: parent;'+
                                                     interactiveCodeRoot.text + '}'
                                                     , demoCodeContainer, "demoCodeItem");
                     
-                    if (demoObject !== null) {
-                        demoHeaderContainer.visible = true
-                        demoCodeContainer.visible = true
-                    }
+//                    if (demoObject === null) {
+//                        demoCodeErrorText.visible = true
+//                    }
                     
                 }
                 
@@ -123,6 +155,7 @@ Rectangle {
                 onClicked: {
                     if (demoObject !== null)
                         demoObject.destroy()
+//                    demoCodeErrorText.visible = false
                     demoHeaderContainer.visible = false
                     demoCodeContainer.visible = false
                     demoHeaderContainer.x = 0
@@ -153,15 +186,15 @@ Rectangle {
         
         Gradient {
             id: normalHeaderGradient
-            GradientStop { position: 0; color: "white" }
+            GradientStop { position: 0; color: "white"      }
             GradientStop { position: 0.5; color: "darkGray" }
-            GradientStop { position: 1; color: "white" }
+            GradientStop { position: 1; color: "white"      }
         }
         
         Gradient {
             id: hoverHeaderGradient
             GradientStop { position: 0; color: "darkgrey" }
-            GradientStop { position: 0.5; color: "white" }
+            GradientStop { position: 0.5; color: "white"  }
             GradientStop { position: 1; color: "darkgrey" }
         }
         
@@ -250,6 +283,7 @@ Rectangle {
                         demoObject.destroy()
                     demoHeaderContainer.visible = false
                     demoCodeContainer.visible = false
+//                    demoCodeErrorText.visible = false
                     
                     demoHeaderContainer.x = 0
                     demoHeaderContainer.y = interactiveCodeRoot.y
@@ -295,6 +329,19 @@ Rectangle {
             
             border.color: "black"
             border.width: 1
+        }
+        
+        
+        Text {
+            id: demoCodeErrorText
+            
+            anchors.centerIn: parent
+            
+            text: "Erreur de chargement !"
+            
+            visible: (demoObject === null)
+            
+            font.pointSize: 30
         }
         
     }
