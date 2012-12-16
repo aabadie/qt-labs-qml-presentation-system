@@ -71,14 +71,18 @@ Rectangle {
                 hoverEnabled: true
                 
                 onClicked: {
-                    demoHeaderContainer.visible = true
-                    demoCodeContainer.visible = true
                     
                     if (demoObject !== null)
                         demoObject.destroy()
                     demoObject = Qt.createQmlObject('import QtQuick 2.0; Item {anchors.fill: parent;'+
                                                     interactiveCodeRoot.text + '}'
                                                     , demoCodeContainer, "demoCodeItem");
+                    
+                    if (demoObject !== null) {
+                        demoHeaderContainer.visible = true
+                        demoCodeContainer.visible = true
+                    }
+                    
                 }
                 
                 states: [
@@ -117,7 +121,8 @@ Rectangle {
                 hoverEnabled: true
                 
                 onClicked: {
-                    demoObject.destroy()
+                    if (demoObject !== null)
+                        demoObject.destroy()
                     demoHeaderContainer.visible = false
                     demoCodeContainer.visible = false
                     demoHeaderContainer.x = 0
@@ -146,6 +151,20 @@ Rectangle {
         
         visible: false
         
+        Gradient {
+            id: normalHeaderGradient
+            GradientStop { position: 0; color: "white" }
+            GradientStop { position: 0.5; color: "darkGray" }
+            GradientStop { position: 1; color: "white" }
+        }
+        
+        Gradient {
+            id: hoverHeaderGradient
+            GradientStop { position: 0; color: "darkgrey" }
+            GradientStop { position: 0.5; color: "white" }
+            GradientStop { position: 1; color: "darkgrey" }
+        }
+        
         Rectangle {
             id: demoHeader
             
@@ -155,11 +174,7 @@ Rectangle {
             anchors.top: parent.top
             anchors.left: parent.left
             
-            gradient: Gradient {
-                GradientStop { position: 0; color: "white" }
-                GradientStop { position: 0.5; color: "darkGray" }
-                GradientStop { position: 1; color: "white" }
-            }
+            gradient: normalHeaderGradient
             
             Text {
                 text: "Demo"
@@ -181,7 +196,7 @@ Rectangle {
                         when: demoContainerDragArea.containsMouse
                         PropertyChanges {
                             target: demoHeader
-                            color: "lightgreen"
+                            gradient: hoverHeaderGradient
                         }
                     }
                 ]
@@ -231,7 +246,8 @@ Rectangle {
                 hoverEnabled: true
                 
                 onClicked: {
-                    demoObject.destroy()
+                    if (demoObject !== null)
+                        demoObject.destroy()
                     demoHeaderContainer.visible = false
                     demoCodeContainer.visible = false
                     
