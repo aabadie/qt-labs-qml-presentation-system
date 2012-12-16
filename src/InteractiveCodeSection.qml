@@ -104,17 +104,11 @@ Rectangle {
                     if (demoObject !== null)
                         demoObject.destroy()
                     
-                    demoHeaderContainer.visible = true
                     demoCodeContainer.visible = true
                     
                     demoObject = Qt.createQmlObject('import QtQuick 2.0; Item {anchors.fill: parent;'+
                                                     interactiveCodeRoot.text + '}'
                                                     , demoCodeContainer, "demoCodeItem");
-                    
-//                    if (demoObject === null) {
-//                        demoCodeErrorText.visible = true
-//                    }
-                    
                 }
                 
                 states: [
@@ -155,11 +149,10 @@ Rectangle {
                 onClicked: {
                     if (demoObject !== null)
                         demoObject.destroy()
-//                    demoCodeErrorText.visible = false
-                    demoHeaderContainer.visible = false
                     demoCodeContainer.visible = false
-                    demoHeaderContainer.x = 0
-                    demoHeaderContainer.y = interactiveCodeRoot.y
+                    
+                    demoCodeContainer.x = 0
+                    demoCodeContainer.y = interactiveCodeRoot.y
                 }
                 
                 states: [
@@ -177,142 +170,6 @@ Rectangle {
     }
         
     Item {
-        id: demoHeaderContainer
-        
-        height: 15
-        width: parent.width
-        
-        visible: false
-        
-        Gradient {
-            id: normalHeaderGradient
-            GradientStop { position: 0; color: "white"      }
-            GradientStop { position: 0.5; color: "darkGray" }
-            GradientStop { position: 1; color: "white"      }
-        }
-        
-        Gradient {
-            id: hoverHeaderGradient
-            GradientStop { position: 0; color: "darkgrey" }
-            GradientStop { position: 0.5; color: "white"  }
-            GradientStop { position: 1; color: "darkgrey" }
-        }
-        
-        Rectangle {
-            id: demoHeader
-            
-            height: parent.height
-            width: parent.width - 15
-            
-            anchors.top: parent.top
-            anchors.left: parent.left
-            
-            gradient: normalHeaderGradient
-            
-            Text {
-                text: "Demo"
-                anchors.centerIn: parent
-            }
-            
-            MouseArea {
-                id: demoContainerDragArea
-                
-                anchors.fill: parent
-                
-                hoverEnabled: true
-                
-                drag.target: demoHeaderContainer
-                
-                states: [
-                    State {
-                        name: "entered"
-                        when: demoContainerDragArea.containsMouse
-                        PropertyChanges {
-                            target: demoHeader
-                            gradient: hoverHeaderGradient
-                        }
-                    }
-                ]
-            }
-        }
-        
-        Rectangle {
-            id: demoCloseButton
-            
-            height: parent.height
-            width: 15
-
-            anchors.top: parent.top
-            anchors.right: parent.right
-            
-            gradient: Gradient {
-                GradientStop { position: 0;   color: "white" }
-                GradientStop { position: 0.5; color: "darkGray" }
-                GradientStop { position: 1;   color: "white" }
-            }
-            
-            Rectangle {
-                id: demoCloseButtonBg
-                
-                anchors.fill: parent
-                
-                radius: parent.width / 2
-                
-                color: "white"
-                
-                border.color: "black"
-                border.width: 1
-            }
-            
-            Text {
-                text: "X"
-                
-                font.pointSize: 10
-                anchors.centerIn: parent
-            }
-            
-            MouseArea {
-                id: demoCloseArea
-                
-                anchors.fill: parent
-                
-                hoverEnabled: true
-                
-                onClicked: {
-                    if (demoObject !== null)
-                        demoObject.destroy()
-                    demoHeaderContainer.visible = false
-                    demoCodeContainer.visible = false
-//                    demoCodeErrorText.visible = false
-                    
-                    demoHeaderContainer.x = 0
-                    demoHeaderContainer.y = interactiveCodeRoot.y
-                }
-                
-                states: [
-                    State {
-                        name: "entered"
-                        when: demoCloseArea.containsMouse
-                        PropertyChanges {
-                            target: demoCloseButtonBg
-                            color: "pink"
-                        }
-                    }
-                ]
-            }
-        }
-        
-        Rectangle {
-            anchors.fill: parent
-            
-            color:"transparent"
-            
-            border.color: "black"
-            border.width: 1
-        }
-    }
-    
-    Item {
         id: demoCodeContainer
         
         width: parent.width
@@ -320,15 +177,40 @@ Rectangle {
         
         visible: false
         
-        anchors.top: demoHeaderContainer.bottom
-        anchors.left: demoHeaderContainer.left
+        x: 0
+        y: interactiveCodeRoot.y
+        
+        MouseArea {
+            id: demoContainerDragArea
+            
+            anchors.fill: parent
+            
+            hoverEnabled: true
+            
+            drag.target: demoCodeContainer
+            
+            states: [
+                State {
+                    name: "entered"
+                    when: demoContainerDragArea.containsMouse
+                    PropertyChanges {
+                        target: demoCodeContainerBG
+                        color: "Tan"
+                    }
+                }
+            ]
+        }
         
         Rectangle {
+            id: demoCodeContainerBG
+            
             opacity: 0.8
             anchors.fill: parent
             
             border.color: "black"
             border.width: 1
+            
+            radius: 10
         }
         
         
@@ -343,6 +225,7 @@ Rectangle {
             
             font.pointSize: 30
         }
+        
         
     }
 }
