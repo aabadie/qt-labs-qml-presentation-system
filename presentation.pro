@@ -1,7 +1,7 @@
 TARGETPATH=Qt/labs/presentation
 TEMPLATE=lib
 
-CONFIG += plugin
+#CONFIG += plugin
 
 qmldir.files += \
     src/qmldir \
@@ -12,7 +12,7 @@ qmldir.files += \
     src/SlideCounter.qml\
     src/InteractiveCodeSection.qml
 
-qmldir.path +=  $$[QT_INSTALL_QML]/$$TARGETPATH
+#qmldir.path +=  $$[QT_INSTALL_QML]/$$TARGETPATH
 
 INSTALLS += qmldir
 
